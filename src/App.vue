@@ -20,7 +20,9 @@
 <script>
 import TableRow from "@/components/TableRow";
 import TableHead from "@/components/TableHead";
+// import axios from "axios";
 
+// import "@/static/renderer"
 
 export default {
   name: 'App',
@@ -37,16 +39,23 @@ export default {
       polling: null
     }
   },
-  methods : {
-    pollData(){
-      this.polling = setInterval(function(){
-        // get your datat here
-      }, 5*60*1000)
+  created() {
+    this.pollData()
+    if (this.timer) {
+      clearInterval(this.timer)
+    } else {
+      this.timer = setInterval(() => {
+        setTimeout(this.pollData, 0)
+      }, 100000000)
     }
   },
-  created () {
-    this.pollData()
-  }
+  methods: {
+    pollData() {
+      for (let i = 0; i < 10; i++) {
+        this.names[i]="我是名字"
+      }
+    }
+  },
 }
 
 </script>
@@ -59,7 +68,10 @@ div.table-container {
 }
 
 body {
+  margin-top: 20px;
   background-color: rgba(17, 17, 17, 0.8);
+  font-size: x-large;
+  -webkit-app-region: drag;
 }
 
 table {
@@ -69,12 +81,13 @@ table {
   border-bottom: solid 2px #afafaf;
   border-right: 0;
   margin: 0;
-  width: 300px;
+  width: 450px;
   display: block;
   overflow-x: auto;
 }
 
 tr {
+  text-align: center;
   border-collapse: collapse;
   color: #eee;
   /*margin: 16px 0;*/
@@ -85,7 +98,7 @@ tr {
 }
 
 td {
-  width: 100px;
+  width: 150px;
   padding: 10px 5px;
 }
 </style>

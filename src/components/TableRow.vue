@@ -1,8 +1,8 @@
 <template>
   <tr>
     <td>{{ name }}</td>
-    <td>{{ today }} km</td>
-    <td>{{ whole }} km</td>
+    <td>{{ today }}</td>
+    <td>{{ whole }}</td>
   </tr>
 </template>
 
