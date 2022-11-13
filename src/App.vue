@@ -57,15 +57,20 @@ export default {
       for (let i = 0; i < 10; i++) {
         this.names[i]="我是名字"
       }
-      let dataList=[]
+      // let dataList=[]
       for(let i=0;i<this.idList.length;i++){
         let k=[];
 
         axios.get("https://jinhuaschool.smart-run.cn/report/student/index?student_no="+this.idList[i])
         .then(response=>(k[0]=response))
-        .catch(function (error) {console.log(error);});
+        .catch((error)=>(console.log(error)));
 
-        axios.get("jinhuaschool.smart-run.cn/report/student/record?student_no="+this.idList[i]+"&day=")
+        const date=new Date()
+        axios.get("jinhuaschool.smart-run.cn/report/student/record?student_no="+this.idList[i]+"&day="+date.getFullYear+'-'+date.getMonth+'-'+date.getDate)
+        .then(response=>(k[1]=response))
+        .catch((error)=>(console.log(error)));
+
+        this.names[i]=k;
       }
     }
   },
