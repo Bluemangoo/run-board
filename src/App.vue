@@ -20,7 +20,8 @@
 <script>
 import TableRow from "@/components/TableRow";
 import TableHead from "@/components/TableHead";
-// import axios from "axios";
+import axios from "axios";
+import { response } from "express";
 
 // import "@/static/renderer"
 
@@ -32,10 +33,12 @@ export default {
   },
   data() {
     let names = [], todays = [], wholes = [];
+    const idList=[20211109];
     return {
       names,
       todays,
       wholes,
+      idList,
       polling: null
     }
   },
@@ -53,6 +56,16 @@ export default {
     pollData() {
       for (let i = 0; i < 10; i++) {
         this.names[i]="我是名字"
+      }
+      let dataList=[]
+      for(let i=0;i<this.idList.length;i++){
+        let k=[];
+
+        axios.get("https://jinhuaschool.smart-run.cn/report/student/index?student_no="+this.idList[i])
+        .then(response=>(k[0]=response))
+        .catch(function (error) {console.log(error);});
+
+        axios.get("jinhuaschool.smart-run.cn/report/student/record?student_no="+this.idList[i]+"&day=")
       }
     }
   },
