@@ -21,7 +21,6 @@
 import TableRow from "@/components/TableRow";
 import TableHead from "@/components/TableHead";
 import axios from "axios";
-import { response } from "express";
 
 // import "@/static/renderer"
 
