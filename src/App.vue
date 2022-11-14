@@ -61,15 +61,18 @@ export default {
         let k=[];
 
         axios.get("https://jinhuaschool.smart-run.cn/report/student/index?student_no="+this.idList[i])
-        .then(response=>(k[0]=response))
+        .then(function(response){let res=response.data;
+          k[0]=res,console.log(k[0])})
         .catch((error)=>(console.log(error)));
 
         const date=new Date()
-        axios.get("jinhuaschool.smart-run.cn/report/student/record?student_no="+this.idList[i]+"&day="+date.getFullYear+'-'+date.getMonth+'-'+date.getDate)
+        axios.get("https://jinhuaschool.smart-run.cn/report/student/record?student_no="+this.idList[i]+"&day="+date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate())
         .then(response=>(k[1]=response))
         .catch((error)=>(console.log(error)));
 
-        this.names[i]=k;
+        // console.log(k[0])
+
+        // this.names[i]=k;
       }
     }
   },
