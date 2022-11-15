@@ -32,7 +32,7 @@ export default {
   },
   data() {
     let names = [], todays = [], wholes = [];
-    const idList=[20211109];
+    const idList=[20211205,20211109];
     return {
       names,
       todays,
@@ -56,24 +56,42 @@ export default {
       for (let i = 0; i < 10; i++) {
         this.names[i]="我是名字"
       }
-      // let dataList=[]
+      let dataList=[]
       for(let i=0;i<this.idList.length;i++){
         let k=[];
 
         axios.get("https://jinhuaschool.smart-run.cn/report/student/index?student_no="+this.idList[i])
-        .then(function(response){let res=response.data;
-          k[0]=res,console.log(k[0])})
+        .then(function(response){
+          let res=JSON.parse(response.data);
+          k[0]=res["data"]["student"]["name"];
+          k[2]=res["data"]["process"][0]["distance"]
+          k[2]=parseFloat(k[2])
+        })
         .catch((error)=>(console.log(error)));
 
         const date=new Date()
         axios.get("https://jinhuaschool.smart-run.cn/report/student/record?student_no="+this.idList[i]+"&day="+date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate())
-        .then(response=>(k[1]=response))
+        .then(function(response){
+          k[1]=parseFloat(JSON.parse(response.data)["data"]["length"])})
         .catch((error)=>(console.log(error)));
 
-        // console.log(k[0])
+        dataList[i]=k;
 
-        // this.names[i]=k;
+        console.log(k)
       }
+
+      let sorted=[dataList[0]]
+      for(let i=1;i<dataList.length&&i<10;i++){
+        let flag=true;
+        for(let j=i-1;j>=0;j--){
+          if(dataList[i][1]>sorted[j][1]){
+            sorted[j+1]=sorted[j]
+            flag=false;
+          }
+          else if(dataList[i][1]==sorted[j][1])//////
+        }
+      }
+
     }
   },
 }
