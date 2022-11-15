@@ -13,7 +13,7 @@ function createWindow() {
         transparent: true,
         frame: false,
         width: 490,
-        height: 630,
+        height: 770,
         resizable: false,
         minimizable: false,
         maximizable: false,
@@ -25,13 +25,15 @@ function createWindow() {
     });
     // 加载应用的 index.html。
     // mainWindow.loadURL(`file://${__dirname}/common/index.html`);
-    mainWindow.loadURL('http://localhost:8080/');
+    mainWindow.loadURL(`file://${__dirname}/dist/index.html`);
     // 启用开发工具
     // mainWindow.webContents.openDevTools();
 
     mainWindow.setAlwaysOnTop(true)
 
-    mainWindow.setPosition(1350,200)
+    mainWindow.setSkipTaskbar(true)
+
+    mainWindow.setPosition(1350,140)
     // mainWindow.setPosition(parseInt(screen.width/4*3),parseInt(screen.height/2))
 }
 app.whenReady().then(() =>{
