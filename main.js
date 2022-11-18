@@ -18,18 +18,16 @@ function createWindow() {
         minimizable: false,
         maximizable: false,
         webPreferences: {
-            devTools: false,
+            devTools: true,
             nodeIntegration: true,
             contextIsolation: false
         }
     });
     // 加载应用的 index.html。
     // mainWindow.loadURL(`file://${__dirname}/common/index.html`);
-    mainWindow.loadURL(`file://${__dirname}/dist/index.html`);
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
     // 启用开发工具
     // mainWindow.webContents.openDevTools();
-
-    mainWindow.setAlwaysOnTop(true)
 
     mainWindow.setSkipTaskbar(true)
 

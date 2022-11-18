@@ -34,70 +34,90 @@ export default {
   data() {
     let names = [], todays = [], wholes = [];
     const idList = [20210502, 20210505, 20210506, 20210510, 20210512, 20210513, 20210503, 20210521, 20210523, 20210619, 20210612, 20210704, 20210721, 20210821, 20210806, 20210912, 20210914, 20211109, 20211103, 20211114, 20211115, 20211123, 20211208, 20211205, 20211517, 20211518, 20211611, 20211618, 20211524, 20211427, 20210531, 20210544, 20210535, 20210728, 20210829, 20210837, 20210940, 20211142, 20211237, 20211238, 20211329, 20211333, 20211548, 20211644, 20211047];
+    let firstLoad = true;
 
     return {
       names,
       todays,
       wholes,
       idList,
+      firstLoad,
       polling: null
     }
   },
   created() {
-    this.pollData()
+    for (let i = 0; i < 10; i++) {
+      this.names[i] = "Loading";
+    }
+    this.names[0] = "Get 0/" + this.idList.length;
+    this.pollData();
     if (this.timer) {
-      clearInterval(this.timer)
+      clearInterval(this.timer);
     } else {
       this.timer = setInterval(() => {
         setTimeout(this.pollData, 0)
-      }, 100000000)
+      }, 5 * 60 * 1000);
     }
   },
   methods: {
     async pollData() {
 
       const getPage = async (url) => {
-        const {data} = await axios.get(url, {})
-        return data
+        const {data} = await axios.get(url);
+        return data;
       }
 
-      for (let i = 0; i < 10; i++) {
-        this.names[i] = "Loading"
-      }
-      let dataList = []
+      let dataList = [];
       for (let i = 0; i < this.idList.length; i++) {
 
         let response;
 
-        response = await getPage("https://jinhuaschool.smart-run.cn/report/student/index?student_no=" + this.idList[i])
+        response = await getPage("https://jinhuaschool.smart-run.cn/report/student/index?student_no=" + this.idList[i]);
 
         let res = JSON.parse(response);
-        let k = []
+        let k = [];
         k[0] = res["data"]["student"]["name"];
         try {
           k[2] = parseFloat(res["data"]["process"][0]["distance"]);
         } catch (ex) {
-          k[2] = 0
+          k[2] = 0;
         }
 
-        const date = new Date()
-        response = await getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + this.idList[i] + "&day=" + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate())
-
+        const date = new Date();
+        let month=date.getMonth()+1;
+        if(month<10){
+          month='0'+month;
+        }
+        let day=date.getDate();
+        if(day<10){
+          day='0'+day;
+        }
+        response = await getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + this.idList[i] + "&day=" + date.getFullYear() + '-' + month + '-' + day)
+        k[1] = 0.0
         try {
-          k[1] = parseFloat(JSON.parse(response)["data"]["length"]);
+          let var1 = JSON.parse(response)["data"];
+          for (let i = 0; i < var1.length; i++) {
+            let var2 = parseFloat(var1[i]["tolastdistence"]);
+            if (var2 >= 1) {
+              k[1] += var2;
+            }
+          }
         } catch (ex) {
-          k[1] = 0.0
+          k[1] = 0.0;
         }
         dataList[i] = k;
+        if (this.firstLoad) {
+          this.names[0] = "Get " + (i + 1) + "/" + this.idList.length;
+        }
       }
 
 
-      dataList.sort((a,b)=>{
-        if(a[1]<b[1]||(a[1]===b[1]&&a[2]<b[2])){
+      dataList.sort((a, b) => {
+        if (a[1] < b[1] || (a[1] === b[1] && a[2] < b[2])) {
           return 1;
-        }else if(a[1]>b[1]||(a[1]===b[1]&&a[2]>b[2])){
+        } else if (a[1] > b[1] || (a[1] === b[1] && a[2] > b[2])) {
           return -1;
-        }else{
+        } else {
           return 0;
         }
       });
@@ -108,6 +128,7 @@ export default {
         this.todays[i] = dataList[i][1];
         this.wholes[i] = dataList[i][2];
       }
+      this.firstLoad = false;
     }
   },
 }
