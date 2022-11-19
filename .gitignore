@@ -23,5 +23,6 @@ pnpm-debug.log*
 *.sw?
 
 # Others
-/public/
+/public
 yarn.lock
+/build

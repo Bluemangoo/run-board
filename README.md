@@ -1,5 +1,7 @@
 # run-board
 
+Set your id list at `App.vue > data() > idList`
+
 ## Project setup
 ```
 yarn install
@@ -20,5 +22,17 @@ yarn build
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Election setup
+```
+COPY election.package.json build/package.json
+CD build
+yarn install
+```
+
+### Election build
+```
+MKDIR build
+ROBOCOPY dist build /E
+CD build
+yarn run build
+```
