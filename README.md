@@ -24,6 +24,7 @@ yarn lint
 
 ### Election setup
 ```
+MKDIR build
 COPY election.package.json build/package.json
 CD build
 yarn install
@@ -31,8 +32,8 @@ yarn install
 
 ### Election build
 ```
-MKDIR build
 ROBOCOPY dist build /E
+COPY main.js build/main.js
 CD build
 yarn run build
 ```
