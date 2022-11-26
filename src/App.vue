@@ -34,29 +34,136 @@ export default {
   data() {
     let names = [], todays = [], wholes = [];
     const idList = [20210502, 20210505, 20210506, 20210510, 20210512, 20210513, 20210503, 20210521, 20210523, 20210619, 20210612, 20210704, 20210721, 20210821, 20210806, 20210912, 20210914, 20211109, 20211103, 20211114, 20211115, 20211123, 20211208, 20211205, 20211517, 20211518, 20211611, 20211618, 20211524, 20211427, 20210531, 20210544, 20210535, 20210728, 20210829, 20210837, 20210940, 20211142, 20211237, 20211238, 20211329, 20211333, 20211548, 20211644, 20211047];
-    let firstLoad = true;
-
+    let tmpList = [];
+    const day = function () {
+      const date = new Date();
+      let month = date.getMonth() + 1;
+      if (month < 10
+      ) {
+        month = '0' + month;
+      }
+      let day = date.getDate();
+      if (day < 10) {
+        day = '0' + day;
+      }
+      return date.getFullYear() + '-' + month + '-' + day
+    }()
+    let tasks = [0, 0];
     return {
       names,
       todays,
       wholes,
       idList,
-      firstLoad,
+      tmpList,
+      day,
+      tasks,
       polling: null
     }
   },
-  created() {
+  async created() {
     for (let i = 0; i < 10; i++) {
       this.names[i] = "Loading";
     }
-    this.names[0] = "Get 0/" + this.idList.length;
-    this.pollData();
+    this.names[0] = `Get ${this.tasks[0]}/${this.tasks[1]}`
+    {
+      const getPage = async (url) => {
+        const {data} = await axios.get(url);
+        return data;
+      }
+      let tasks = this.tasks, names = this.names;
+      const addTask = function () {
+        tasks[1]++;
+        names[0] = `Get ${tasks[0]}/${tasks[1]}`;
+      }, doneTask = function () {
+        tasks[0]++;
+        names[0] = `Get ${tasks[0]}/${tasks[1]}`;
+      }
+      const day = this.day, idList = this.idList;
+      let dataList = [];
+      let dateList = [];
+      let taskList = [], taskList2 = [];
+
+      for (let i = 0; i < idList.length; i++) {
+        dataList[i] = [null, 0.0, 0.0];
+        addTask();
+        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/index?student_no=" + this.idList[i])
+            .then(function (response) {
+              let res = JSON.parse(response);
+              dataList[i][0] = res["data"]["student"]["name"];
+              doneTask();
+            })
+        addTask();
+        taskList[taskList.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/month?student_no=" + idList[i])
+            .then(function (response) {
+              let var1 = JSON.parse(response)["data"];
+              for (let var2 = 0; var2 < var1.length; var2++) {
+                let date = var1[var2]["date"];
+                if (date !== day) {
+                  dateList[dateList.length] = [i, idList[i], date];
+                }
+              }
+              doneTask();
+            })
+
+        addTask();
+        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[i] + "&day=" + day)
+            .then(function (response) {
+              let var1 = JSON.parse(response)["data"];
+              for (let var2 = 0; var2 < var1.length; var2++) {
+                let var3 = parseFloat(var1[var2]["tolastdistence"]);
+                if (var3 >= 1) {
+                  dataList[i][1] += var3;
+                }
+              }
+              doneTask();
+            })
+      }
+
+      await Promise.all(taskList);
+
+      for (let i = 0; i < dateList.length; i++) {
+        addTask();
+        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + dateList[i][1] + "&day=" + dateList[i][2])
+            .then(function (response) {
+              let var1 = JSON.parse(response)["data"];
+              for (let j = 0; j < var1.length; j++) {
+                let var3 = parseFloat(var1[j]["tolastdistence"]);
+                if (var3 >= 1) {
+                  dataList[dateList[i][0]][2] += var3;
+                }
+              }
+              doneTask();
+            })
+      }
+
+      await Promise.all(taskList2);
+
+      this.tmpList = JSON.parse(JSON.stringify(dataList));
+
+      dataList.sort((a, b) => {
+        if (a[1] < b[1] || (a[1] === b[1] && a[2] < b[2])) {
+          return 1;
+        } else if (a[1] > b[1] || (a[1] === b[1] && a[2] > b[2])) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+
+      for (let i = 0; i < dataList.length && i < 10; i++) {
+        this.names[i] = dataList[i][0];
+        this.todays[i] = dataList[i][1];
+        this.wholes[i] = dataList[i][2] + dataList[i][1];
+      }
+
+    }
+
     if (this.timer) {
       clearInterval(this.timer);
     } else {
       this.timer = setInterval(() => {
         setTimeout(this.pollData, 0)
-      }, 5 * 60 * 1000);
+      }, 60 * 1000);
     }
   },
   methods: {
@@ -67,50 +174,24 @@ export default {
         return data;
       }
 
-      let dataList = [];
+      const idList = this.idList, day = this.day;
+      let dataList = JSON.parse(JSON.stringify(this.tmpList));
+      let taskList = []
       for (let i = 0; i < this.idList.length; i++) {
-
-        let response;
-
-        response = await getPage("https://jinhuaschool.smart-run.cn/report/student/index?student_no=" + this.idList[i]);
-
-        let res = JSON.parse(response);
-        let k = [];
-        k[0] = res["data"]["student"]["name"];
-        try {
-          k[2] = parseFloat(res["data"]["process"][0]["distance"]);
-        } catch (ex) {
-          k[2] = 0;
-        }
-
-        const date = new Date();
-        let month=date.getMonth()+1;
-        if(month<10){
-          month='0'+month;
-        }
-        let day=date.getDate();
-        if(day<10){
-          day='0'+day;
-        }
-        response = await getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + this.idList[i] + "&day=" + date.getFullYear() + '-' + month + '-' + day)
-        k[1] = 0.0
-        try {
-          let var1 = JSON.parse(response)["data"];
-          for (let i = 0; i < var1.length; i++) {
-            let var2 = parseFloat(var1[i]["tolastdistence"]);
-            if (var2 >= 1) {
-              k[1] += var2;
-            }
-          }
-        } catch (ex) {
-          k[1] = 0.0;
-        }
-        dataList[i] = k;
-        if (this.firstLoad) {
-          this.names[0] = "Get " + (i + 1) + "/" + this.idList.length;
-        }
+        dataList[i][1] = 0.0;
+        taskList[taskList.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[i] + "&day=" + day)
+            .then(function (response) {
+              let var1 = JSON.parse(response)["data"];
+              for (let var2 = 0; var2 < var1.length; var2++) {
+                let var3 = parseFloat(var1[var2]["tolastdistence"]);
+                if (var3 >= 1) {
+                  dataList[i][1] += var3;
+                }
+              }
+            })
       }
 
+      await Promise.all(taskList);
 
       dataList.sort((a, b) => {
         if (a[1] < b[1] || (a[1] === b[1] && a[2] < b[2])) {
@@ -128,8 +209,7 @@ export default {
         this.todays[i] = dataList[i][1];
         this.wholes[i] = dataList[i][2];
       }
-      this.firstLoad = false;
-    }
+    },
   },
 }
 

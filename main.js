@@ -26,6 +26,7 @@ function createWindow() {
     // 加载应用的 index.html。
     // mainWindow.loadURL(`file://${__dirname}/common/index.html`);
     mainWindow.loadURL(`file://${__dirname}/index.html`);
+    // mainWindow.loadURL(`http://localhost:8080`);
     // 启用开发工具
     // mainWindow.webContents.openDevTools();
 

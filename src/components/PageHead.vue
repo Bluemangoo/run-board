@@ -1,6 +1,6 @@
 <template>
 <div>
-  <p>乐跑卷狗榜单</p>
+  <p>乐跑卷狗榜</p>
 </div>
 </template>
 
