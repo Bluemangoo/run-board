@@ -100,6 +100,7 @@ export default {
                 let date = var1[var2]["date"];
                 if (date !== day) {
                   dateList[dateList.length] = [i, idList[i], date];
+                  addTask();
                 }
               }
               doneTask();
@@ -122,7 +123,6 @@ export default {
       await Promise.all(taskList);
 
       for (let i = 0; i < dateList.length; i++) {
-        addTask();
         taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + dateList[i][1] + "&day=" + dateList[i][2])
             .then(function (response) {
               let var1 = JSON.parse(response)["data"];
