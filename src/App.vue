@@ -33,7 +33,7 @@ export default {
   },
   data() {
     let names = [], todays = [], wholes = [];
-    const idList = [20210502, 20210505, 20210506, 20210510, 20210512, 20210513, 20210503, 20210521, 20210523, 20210619, 20210612, 20210704, 20210721, 20210821, 20210806, 20210912, 20210914, 20211109, 20211103, 20211114, 20211115, 20211123, 20211208, 20211205, 20211517, 20211518, 20211611, 20211618, 20211524, 20211427, 20210531, 20210544, 20210535, 20210728, 20210829, 20210837, 20210940, 20211142, 20211237, 20211238, 20211329, 20211333, 20211548, 20211644, 20211047];
+    const idList = [20210502, 20210503, 20210505, 20210506, 20210510, 20210512, 20210513, 20210521, 20210523, 20210531, 20210535, 20210544, 20210612, 20210619, 20210704, 20210721, 20210728, 20210806, 20210821, 20210829, 20210837, 20210912, 20210914, 20210940, 20211047, 20211103, 20211109, 20211114, 20211115, 20211123, 20211142, 20211205, 20211208, 20211237, 20211238, 20211329, 20211333, 20211427, 20211517, 20211518, 20211524, 20211548, 20211611, 20211618, 20211644];
     let tmpList = [];
     const day = function () {
       const date = new Date();
@@ -74,7 +74,7 @@ export default {
       const addTask = () => {
         tasks[1]++;
         names[0] = `Get ${tasks[0]}/${tasks[1]}`;
-      }, doneTask = () =>  {
+      }, doneTask = () => {
         tasks[0]++;
         names[0] = `Get ${tasks[0]}/${tasks[1]}`;
       }
@@ -94,7 +94,7 @@ export default {
                 if (date !== day) {
                   dateList[dateList.length] = [i, idList[i], date];
                   addTask();
-                }else {
+                } else {
                   dateList2[dateList2.length] = [i];
                   addTask();
                 }
@@ -114,7 +114,7 @@ export default {
 
       await Promise.all(taskList);
 
-      for (let i=0;i<dateList2.length;i++){
+      for (let i = 0; i < dateList2.length; i++) {
         taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[dateList2[i]] + "&day=" + day)
             .then(function (response) {
               let var1 = JSON.parse(response)["data"];
