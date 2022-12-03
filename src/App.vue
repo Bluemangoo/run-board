@@ -71,27 +71,20 @@ export default {
         return data;
       }
       let tasks = this.tasks, names = this.names;
-      const addTask = function () {
+      const addTask = () => {
         tasks[1]++;
         names[0] = `Get ${tasks[0]}/${tasks[1]}`;
-      }, doneTask = function () {
+      }, doneTask = () =>  {
         tasks[0]++;
         names[0] = `Get ${tasks[0]}/${tasks[1]}`;
       }
       const day = this.day, idList = this.idList;
       let dataList = [];
-      let dateList = [];
+      let dateList = [], dateList2 = [];
       let taskList = [], taskList2 = [];
 
       for (let i = 0; i < idList.length; i++) {
         dataList[i] = [null, 0.0, 0.0];
-        addTask();
-        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/index?student_no=" + this.idList[i])
-            .then(function (response) {
-              let res = JSON.parse(response);
-              dataList[i][0] = res["data"]["student"]["name"];
-              doneTask();
-            })
         addTask();
         taskList[taskList.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/month?student_no=" + idList[i])
             .then(function (response) {
@@ -101,26 +94,39 @@ export default {
                 if (date !== day) {
                   dateList[dateList.length] = [i, idList[i], date];
                   addTask();
-                }
-              }
-              doneTask();
-            })
-
-        addTask();
-        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[i] + "&day=" + day)
-            .then(function (response) {
-              let var1 = JSON.parse(response)["data"];
-              for (let var2 = 0; var2 < var1.length; var2++) {
-                let var3 = parseFloat(var1[var2]["tolastdistence"]);
-                if (var3 >= 1) {
-                  dataList[i][1] += var3;
+                }else {
+                  dateList2[dateList2.length] = [i];
+                  addTask();
                 }
               }
               doneTask();
             })
       }
+      for (let i = 0; i < idList.length; i++) {
+        addTask();
+        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/index?student_no=" + this.idList[i])
+            .then(function (response) {
+              let res = JSON.parse(response);
+              dataList[i][0] = res["data"]["student"]["name"];
+              doneTask();
+            })
+      }
 
       await Promise.all(taskList);
+
+      for (let i=0;i<dateList2.length;i++){
+        taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[dateList2[i]] + "&day=" + day)
+            .then(function (response) {
+              let var1 = JSON.parse(response)["data"];
+              for (let var2 = 0; var2 < var1.length; var2++) {
+                let var3 = parseFloat(var1[var2]["tolastdistence"]);
+                if (var3 >= 1) {
+                  dataList[dateList2[i]][1] += var3;
+                }
+              }
+              doneTask();
+            })
+      }
 
       for (let i = 0; i < dateList.length; i++) {
         taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + dateList[i][1] + "&day=" + dateList[i][2])
@@ -207,7 +213,7 @@ export default {
       for (let i = 0; i < dataList.length && i < 10; i++) {
         this.names[i] = dataList[i][0];
         this.todays[i] = dataList[i][1];
-        this.wholes[i] = dataList[i][2];
+        this.wholes[i] = dataList[i][2] + dataList[i][1];
       }
     },
   },
