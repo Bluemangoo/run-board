@@ -23,6 +23,11 @@
       <TableRow v-bind:name="names[17]" v-bind:class_="classes[17]" v-bind:today="todays[17]" v-bind:whole="wholes[17]"></TableRow>
       <TableRow v-bind:name="names[18]" v-bind:class_="classes[18]" v-bind:today="todays[18]" v-bind:whole="wholes[18]"></TableRow>
       <TableRow v-bind:name="names[19]" v-bind:class_="classes[19]" v-bind:today="todays[19]" v-bind:whole="wholes[19]"></TableRow>
+      <TableRow v-bind:name="names[20]" v-bind:class_="classes[20]" v-bind:today="todays[20]" v-bind:whole="wholes[20]"></TableRow>
+      <TableRow v-bind:name="names[21]" v-bind:class_="classes[21]" v-bind:today="todays[21]" v-bind:whole="wholes[21]"></TableRow>
+      <TableRow v-bind:name="names[22]" v-bind:class_="classes[22]" v-bind:today="todays[22]" v-bind:whole="wholes[22]"></TableRow>
+      <TableRow v-bind:name="names[23]" v-bind:class_="classes[23]" v-bind:today="todays[23]" v-bind:whole="wholes[23]"></TableRow>
+      <TableRow v-bind:name="names[24]" v-bind:class_="classes[24]" v-bind:today="todays[24]" v-bind:whole="wholes[24]"></TableRow>
     </table>
   </div>
 </template>
@@ -67,12 +72,11 @@ export default {
       idList,
       tmpList,
       day,
-      tasks,
-      polling: null
+      tasks
     }
   },
   async created() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 25; i++) {
       this.names[i] = "Loading";
     }
     this.names[0] = `Get ${this.tasks[0]}/${this.tasks[1]}`
@@ -138,9 +142,10 @@ export default {
                   dataList[dateList2[i]][1] += var3;
                 }
               }
+              dataList[dateList2[i]][2]+=dataList[dateList2[i]][1];
               doneTask();
             })
-        await sleep(50);
+        await sleep(20);
       }
 
       for (let i = 0; i < dateList.length; i++) {
@@ -155,7 +160,7 @@ export default {
               }
               doneTask();
             })
-        await sleep(50);
+        await sleep(20);
       }
 
       await Promise.all(taskList2);
@@ -163,19 +168,19 @@ export default {
       this.tmpList = JSON.parse(JSON.stringify(dataList));
 
       dataList.sort((a, b) => {
-        if (a[1] < b[1] || (a[1] === b[1] && a[2] < b[2])) {
+        if ( a[2] < b[2]) {
           return 1;
-        } else if (a[1] > b[1] || (a[1] === b[1] && a[2] > b[2])) {
+        } else if ( a[2] > b[2]) {
           return -1;
         } else {
           return 0;
         }
       });
 
-      for (let i = 0; i < dataList.length && i < 20; i++) {
+      for (let i = 0; i < dataList.length && i < 25; i++) {
         this.names[i] = dataList[i][0];
         this.todays[i] = dataList[i][1];
-        this.wholes[i] = dataList[i][2] + dataList[i][1];
+        this.wholes[i] = dataList[i][2];
         const classid=dataList[i][3];
         if(classid>70&&classid<89){
           this.classes[i]=`高一(${classid-70})`;
@@ -184,61 +189,7 @@ export default {
           this.classes[i]=`高二(${classid-1})`;
         }
       }
-
     }
-
-    if (this.timer) {
-      clearInterval(this.timer);
-    } else {
-      this.timer = setInterval(() => {
-        setTimeout(this.pollData, 0)
-      }, 60 * 1000);
-    }
-  },
-  methods: {
-    async pollData() {
-
-      const getPage = async (url) => {
-        const {data} = await axios.get(url);
-        return data;
-      }
-
-      const idList = this.idList, day = this.day;
-      let dataList = JSON.parse(JSON.stringify(this.tmpList));
-      let taskList = []
-      for (let i = 0; i < this.idList.length; i++) {
-        dataList[i][1] = 0.0;
-        taskList[taskList.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[i] + "&day=" + day)
-            .then(function (response) {
-              let var1 = JSON.parse(response)["data"];
-              for (let var2 = 0; var2 < var1.length; var2++) {
-                let var3 = parseFloat(var1[var2]["tolastdistence"]);
-                if (var3 >= 1) {
-                  dataList[i][1] += var3;
-                }
-              }
-            })
-      }
-
-      await Promise.all(taskList);
-
-      dataList.sort((a, b) => {
-        if (a[1] < b[1] || (a[1] === b[1] && a[2] < b[2])) {
-          return 1;
-        } else if (a[1] > b[1] || (a[1] === b[1] && a[2] > b[2])) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
-
-
-      for (let i = 0; i < dataList.length && i < 10; i++) {
-        this.names[i] = dataList[i][0];
-        this.todays[i] = dataList[i][1];
-        this.wholes[i] = dataList[i][2] + dataList[i][1];
-      }
-    },
   },
 }
 
