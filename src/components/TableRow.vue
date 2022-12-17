@@ -1,3 +1,4 @@
+<!--suppress CssUnusedSymbol -->
 <template>
   <tr :class="color">
     <td>{{ name }}</td>
@@ -17,12 +18,15 @@ export default {
     whole: Number,
   },
   data() {
-    return {color: "untargeted"}
+    return {color: "common"}
   },
   watch:{
     whole: {
       handler() {
-        if (this.whole >=40){
+        if (this.whole >=100){
+          this.color="gold";
+        }
+        else if (this.whole >=40){
           this.color="red";
         }
         else if(this.whole>=30){
@@ -56,6 +60,9 @@ tr {
 }
 .red{
   background-color: rgba(255, 0, 0, 0.5);
+}
+.gold{
+  background-color: rgba(255, 215, 0, 0.5);
 }
 td {
   border-right: solid 2px #afafaf;
