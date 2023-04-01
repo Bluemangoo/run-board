@@ -1,21 +1,21 @@
 <!--suppress CssUnusedSymbol -->
 <template>
-  <tr :class="color">
-    <td>{{ name }}</td>
-    <td>{{ class_ }}</td>
-    <td>{{ today }}</td>
-    <td>{{ whole }}</td>
-  </tr>
+    <tr :class="color">
+        <td>{{ name }}</td>
+        <td>{{ class_ }}</td>
+        <td>{{ today }}</td>
+        <td>{{ whole }}</td>
+    </tr>
 </template>
 
 <script>
 export default {
-  name: "TableRow",
-  props: {
-    name: String,
-    class_: String,
-    today: Number,
-    whole: Number,
+    name: "TableRow",
+    props: {
+        name: String,
+        class_: String,
+        today: Number,
+        whole: Number
     },
     data() {
         return { color: "common" };
