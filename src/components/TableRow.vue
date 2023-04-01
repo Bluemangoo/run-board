@@ -67,7 +67,7 @@ tr {
 }
 
 .rainbow {
-    background: linear-gradient(to bottom right, rgba(255, 0, 0, 0.8), rgba(255, 165, 0, 0.8), rgba(255, 255, 0, 0.8), rgba(0, 128, 0, 0.8), rgba(0, 255, 255, 0.8), rgba(0, 0, 255, 0.8), rgba(128, 0, 128, 0.8));
+    background: linear-gradient(to bottom right, rgba(255, 0, 0, 0.5), rgba(255, 165, 0, 0.5), rgba(255, 255, 0, 0.5), rgba(0, 128, 0, 0.5), rgba(0, 255, 255, 0.5), rgba(0, 0, 255, 0.5), rgba(128, 0, 128, 0.5));
 }
 
 td {
