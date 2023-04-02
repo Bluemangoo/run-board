@@ -367,7 +367,7 @@ export default {
             let delay = 14;
 
             if (Object.keys(fetch.cache).length > 3000) {
-                delay = 1;
+                delay = 0;
             }
 
             for (let month = start; month < toMonth; month++) {
