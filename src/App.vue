@@ -55,7 +55,7 @@
                       v-bind:whole="wholes[24]"></TableRow>
         </table>
     </div>
-    <div>
+    <!-- <div>
         <p>学期总计</p>
         <table dir="auto" class="s-table">
             <thead>
@@ -88,7 +88,7 @@
                 <td>{{ statistics._2[0] }}</td>
             </tr>
         </table>
-    </div>
+    </div> -->
 </template>
 
 
@@ -260,7 +260,7 @@ export default {
                 }
             }
 
-            saveCache() {
+            async saveCache() {
                 let t = new Date();
                 t.setTime(t.getTime() + (5 * 30 * 24 * 60 * 60 * 1000));
                 const sortedKeys = Object.keys(this.cache).sort();
@@ -298,7 +298,7 @@ export default {
             let dateList = [], dateList2 = [];
             let taskList = [], taskList2 = [];
 
-            const start = 2;
+            // const start = 2;
             let allList = [];
 
             for (let i = 0; i < idList.length; i++) {
@@ -349,8 +349,8 @@ export default {
             await Promise.all(taskList2);
             taskList2 = [];
 
-            const toMonth = new Date().getMonth() + 1;
-            const year = new Date().getFullYear();
+            // const toMonth = new Date().getMonth() + 1;
+            // const year = new Date().getFullYear();
 
             for (let i = 0; i < dataList.length; i++) {
                 const classId = dataList[i][3];
@@ -362,38 +362,38 @@ export default {
 
             fetch.saveCache();
 
-            const dateList3 = [];
+            // const dateList3 = [];
 
-            let delay = 14;
+            // let delay = 14;
 
-            if (Object.keys(fetch.cache).length > 3000) {
-                delay = 0;
-            }
+            // if (Object.keys(fetch.cache).length > 3000) {
+            //     delay = 0;
+            // }
 
-            for (let month = start; month < toMonth; month++) {
-                const monthStr = year + "-" + (month < 10 ? "0" + month : month);
-                for (let i = 0; i < idList.length; i++) {
-                    taskList[taskList.length] = fetch.month(idList[i], monthStr)
-                        .then((data) => {
-                            for (let j = 0; j < data["length"]; j++) {
-                                dateList3[dateList3.length] = [i, data[j]["date"]];
-                            }
-                        });
-                    await sleep(delay);
-                }
-            }
+            // for (let month = start; month < toMonth; month++) {
+            //     const monthStr = year + "-" + (month < 10 ? "0" + month : month);
+            //     for (let i = 0; i < idList.length; i++) {
+            //         taskList[taskList.length] = fetch.month(idList[i], monthStr)
+            //             .then((data) => {
+            //                 for (let j = 0; j < data["length"]; j++) {
+            //                     dateList3[dateList3.length] = [i, data[j]["date"]];
+            //                 }
+            //             });
+            //         await sleep(delay);
+            //     }
+            // }
 
-            await Promise.all(taskList);
+            // await Promise.all(taskList);
 
-            for (let i = 0; i < dateList3.length; i++) {
-                taskList2[taskList2.length] = fetch.record(idList[dateList3[i][0]], dateList3[i][1])
-                    .then((v) => allList[dateList3[i][0]].distance += v);
-                await sleep(delay);
-            }
+            // for (let i = 0; i < dateList3.length; i++) {
+            //     taskList2[taskList2.length] = fetch.record(idList[dateList3[i][0]], dateList3[i][1])
+            //         .then((v) => allList[dateList3[i][0]].distance += v);
+            //     await sleep(delay);
+            // }
 
-            await Promise.all(taskList2);
+            // await Promise.all(taskList2);
 
-            await fetch.saveCache();
+            // fetch.saveCache();
 
             dataList.sort((a, b) => {
                 if (a[2] < b[2]) {
@@ -417,25 +417,25 @@ export default {
                 }
             }
 
-            let a1 = [], a2 = [];
-            for (let i = 0; i < allList.length; i++) {
-                if (allList[i].grade === 1) {
-                    a1[a1.length] = allList[i].distance;
-                } else {
-                    if (allList[i].distance) {
-                        a2[a2.length] = allList[i].distance;
-                    } else {
-                        a2[a2.length] = 0;
-                    }
-                }
-            }
-            a1.sort((a, b) => b - a);
-            a2.sort((a, b) => b - a);
+            // let a1 = [], a2 = [];
+            // for (let i = 0; i < allList.length; i++) {
+            //     if (allList[i].grade === 1) {
+            //         a1[a1.length] = allList[i].distance;
+            //     } else {
+            //         if (allList[i].distance) {
+            //             a2[a2.length] = allList[i].distance;
+            //         } else {
+            //             a2[a2.length] = 0;
+            //         }
+            //     }
+            // }
+            // a1.sort((a, b) => b - a);
+            // a2.sort((a, b) => b - a);
 
-            for (let i = 0; i <= 9; i++) {
-                this.statistics._1[i] = a1[Math.floor(a1.length / 10 * i)];
-                this.statistics._2[i] = a2[Math.floor(a2.length / 10 * i)];
-            }
+            // for (let i = 0; i <= 9; i++) {
+            //     this.statistics._1[i] = a1[Math.floor(a1.length / 10 * i)];
+            //     this.statistics._2[i] = a2[Math.floor(a2.length / 10 * i)];
+            // }
 
         }
     }
