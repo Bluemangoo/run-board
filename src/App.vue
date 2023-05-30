@@ -120,7 +120,7 @@ export default {
                         let var1 = JSON.parse(response)["data"];
                         for (let var2 = 0; var2 < var1.length; var2++) {
                             let var3 = parseFloat(var1[var2]["tolastdistence"]);
-                            if (var3 >= 1 && parseFloat(var1[var2]["totalspeed"]<9)) {
+                            if (var3 >= 1 && parseFloat(var1[var2]["totalspeed"]) < 9) {
                                 dataList[dateList2[i]][1] += var3;
                             }
                         }
@@ -134,7 +134,7 @@ export default {
                         let var1 = JSON.parse(response)["data"];
                         for (let j = 0; j < var1.length; j++) {
                             let var3 = parseFloat(var1[j]["tolastdistence"]);
-                            if (var3 >= 1) {
+                            if (var3 >= 1 && parseFloat(var1[j]["totalspeed"]) < 9) {
                                 dataList[dateList[i][0]][2] += var3;
                             }
                         }
