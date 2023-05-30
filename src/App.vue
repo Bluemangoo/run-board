@@ -218,7 +218,7 @@ export default {
             });
 
 
-            for (let i = 0; i < dataList.length && i < 10; i++) {
+            for (let i = 0; i < dataList.length; i++) {
                 this.names[i] = dataList[i][0];
                 this.todays[i] = dataList[i][1];
                 this.wholes[i] = dataList[i][2] + dataList[i][1];
