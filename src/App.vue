@@ -120,7 +120,7 @@ export default {
                         let var1 = JSON.parse(response)["data"];
                         for (let var2 = 0; var2 < var1.length; var2++) {
                             let var3 = parseFloat(var1[var2]["tolastdistence"]);
-                            if (var3 >= 1) {
+                            if (var3 >= 1 && parseFloat(var1[var2]["totalspeed"]<9)) {
                                 dataList[dateList2[i]][1] += var3;
                             }
                         }
