@@ -164,7 +164,7 @@ export default {
 
             let list = [];
 
-            for (let i = 0; i < dataList.length && i < 10; i++) {
+            for (let i = 0; i < dataList.length; i++) {
                 list[i] = [dataList[i][0], dataList[i][1], dataList[i][2] + dataList[i][1]];
             }
 
