@@ -23,7 +23,7 @@ router.on(`/easy/js/${appJs}.js`, async function(data, response) {
     response.contentType = CONTENT_TYPE.JS;
     let list: number[] = [];
     if (<string>data.query.grade == "1") {
-        list = ID.G1[parseInt(<string>data.query.class) + 1];
+        list = ID.G1[parseInt(<string>data.query.class) - 1];
     }
     if (<string>data.query.grade == "2") {
         list = ID.G2[parseInt(<string>data.query.class) - 1];
