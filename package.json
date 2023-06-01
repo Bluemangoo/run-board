@@ -1,0 +1,16 @@
+{
+  "name": "run-board-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vercel dev"
+  },
+  "dependencies": {
+    "vclight": "^1.1.1",
+    "vercel": "^30.0.0",
+    "vclight-router": "^1.1.5"
+  },
+  "devDependencies": {
+    "@vercel/node": "^2.14.3"
+  }
+}
