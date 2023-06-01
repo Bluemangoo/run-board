@@ -6,11 +6,13 @@
     "serve": "vercel dev"
   },
   "dependencies": {
+    "ejs": "^3.1.9",
     "vclight": "^1.1.1",
-    "vercel": "^30.0.0",
-    "vclight-router": "^1.1.5"
+    "vclight-router": "^1.1.5",
+    "vercel": "^30.0.0"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.2",
     "@vercel/node": "^2.14.3"
   }
 }

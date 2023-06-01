@@ -3,9 +3,16 @@
     {
       "src": "src/*",
       "use": "@vercel/node"
+    },
+    {
+      "src": "easy/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "handle": "filesystem"
+    },
     {
       "src": "/(.*)",
       "dest": "src/main.ts"
