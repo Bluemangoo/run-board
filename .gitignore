@@ -23,5 +23,6 @@ pnpm-debug.log*
 *.sw?
 
 # Others
+package-lock.json
 yarn.lock
 /build
