@@ -3,6 +3,7 @@
 
 # Node Modules
 /node_modules
+/get/node_modules
 
 # Build
 /dist

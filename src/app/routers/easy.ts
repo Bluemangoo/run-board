@@ -28,6 +28,9 @@ router.on(`/easy/js/${appJs}.js`, async function(data, response) {
     if (<string>data.query.grade == "2") {
         list = ID.G2[parseInt(<string>data.query.class) - 1];
     }
+    if (<string>data.query.grade == "3") {
+        list = ID.G3[parseInt(<string>data.query.class) - 1];
+    }
     response.response = ejs.render(fs.readFileSync(`${process.cwd()}/src/public/easy/js/${appJs}.ejs`).toString(), {
         data: {
             idList: JSON.stringify(list)

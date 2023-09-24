@@ -7,6 +7,10 @@
     {
       "src": "easy/**/*",
       "use": "@vercel/static"
+    },
+    {
+      "src": "all/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
