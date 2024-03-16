@@ -4,7 +4,7 @@ import * as fs from "fs";
 import CONTENT_TYPE from "../../const/CONTENT_TYPE";
 import ID from "../../const/ID";
 
-const appJs = "app.276bd057";
+const appJs = "app.dc5b668d";
 
 router.pattern(/^(?=\/easy\/)/, async function(data, response) {
     const parsed = (<string>data.url).split("/");
