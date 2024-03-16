@@ -3,16 +3,8 @@
     <div class="table-container">
         <table dir="auto">
             <TableHead name="姓名" today="今日新增" whole="本月累计"></TableHead>
-            <TableRow v-bind:name="names[0]" v-bind:today="todays[0]" v-bind:whole="wholes[0]"></TableRow>
-            <TableRow v-bind:name="names[1]" v-bind:today="todays[1]" v-bind:whole="wholes[1]"></TableRow>
-            <TableRow v-bind:name="names[2]" v-bind:today="todays[2]" v-bind:whole="wholes[2]"></TableRow>
-            <TableRow v-bind:name="names[3]" v-bind:today="todays[3]" v-bind:whole="wholes[3]"></TableRow>
-            <TableRow v-bind:name="names[4]" v-bind:today="todays[4]" v-bind:whole="wholes[4]"></TableRow>
-            <TableRow v-bind:name="names[5]" v-bind:today="todays[5]" v-bind:whole="wholes[5]"></TableRow>
-            <TableRow v-bind:name="names[6]" v-bind:today="todays[6]" v-bind:whole="wholes[6]"></TableRow>
-            <TableRow v-bind:name="names[7]" v-bind:today="todays[7]" v-bind:whole="wholes[7]"></TableRow>
-            <TableRow v-bind:name="names[8]" v-bind:today="todays[8]" v-bind:whole="wholes[8]"></TableRow>
-            <TableRow v-bind:name="names[9]" v-bind:today="todays[9]" v-bind:whole="wholes[9]"></TableRow>
+            <TableRow v-for="i in 10" v-bind:key="i" v-bind:name="names[i-1]" v-bind:today="todays[i-1]"
+                      v-bind:whole="wholes[i-1]"></TableRow>
         </table>
     </div>
 </template>
@@ -61,6 +53,17 @@ export default {
         };
     },
     async created() {
+        function getCount(data) {
+            let count = 0;
+            for (let var2 = 0; var2 < data.length; var2++) {
+                let var3 = parseFloat(data[var2]["tolastdistence"]) / 1000;
+                if (data[var2]["youxiao"] === 1) {
+                    count += var3;
+                }
+            }
+            return count;
+        }
+
         for (let i = 0; i < 10; i++) {
             this.names[i] = "Loading";
         }
@@ -117,13 +120,7 @@ export default {
             for (let i = 0; i < dateList2.length; i++) {
                 taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[dateList2[i]] + "&day=" + day)
                     .then(function(response) {
-                        let var1 = JSON.parse(response)["data"];
-                        for (let var2 = 0; var2 < var1.length; var2++) {
-                            let var3 = parseFloat(var1[var2]["tolastdistence"]);
-                            if (var3 >= 1 && parseFloat(var1[var2]["totalspeed"]) < 9) {
-                                dataList[dateList2[i]][1] += var3;
-                            }
-                        }
+                        dataList[dateList2[i]][1] += getCount(JSON.parse(response)["data"]);
                         doneTask();
                     });
             }
@@ -131,13 +128,7 @@ export default {
             for (let i = 0; i < dateList.length; i++) {
                 taskList2[taskList2.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + dateList[i][1] + "&day=" + dateList[i][2])
                     .then(function(response) {
-                        let var1 = JSON.parse(response)["data"];
-                        for (let j = 0; j < var1.length; j++) {
-                            let var3 = parseFloat(var1[j]["tolastdistence"]);
-                            if (var3 >= 1 && parseFloat(var1[j]["totalspeed"]) < 9) {
-                                dataList[dateList[i][0]][2] += var3;
-                            }
-                        }
+                        dataList[dateList[i][0]][2] += getCount(JSON.parse(response)["data"]);
                         doneTask();
                     });
             }
@@ -182,6 +173,16 @@ export default {
     },
     methods: {
         async pollData() {
+            function getCount(data) {
+                let count = 0;
+                for (let var2 = 0; var2 < data.length; var2++) {
+                    let var3 = parseFloat(data[var2]["tolastdistence"]) / 1000;
+                    if (data[var2]["youxiao"] === 1) {
+                        count += var3;
+                    }
+                }
+                return count;
+            }
 
             const getPage = async (url) => {
                 const { data } = await axios.get(url);
@@ -195,13 +196,7 @@ export default {
                 dataList[i][1] = 0.0;
                 taskList[taskList.length] = getPage("https://jinhuaschool.smart-run.cn/report/student/record?student_no=" + idList[i] + "&day=" + day)
                     .then(function(response) {
-                        let var1 = JSON.parse(response)["data"];
-                        for (let var2 = 0; var2 < var1.length; var2++) {
-                            let var3 = parseFloat(var1[var2]["tolastdistence"]);
-                            if (var3 >= 1) {
-                                dataList[i][1] += var3;
-                            }
-                        }
+                        dataList[i][1] += getCount(JSON.parse(response)["data"]);
                     });
             }
 
