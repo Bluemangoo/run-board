@@ -1,7 +1,7 @@
 # run-board
 
 > [!WARNING]
-> This repo is scheduled to be archived after June 10, 2024 and deleted after June 10, 2025
+> This repo is archived after June 10, 2024 and scheduled to be deleted after June 10, 2025
 
 Set your id list at `App.vue > data() > idList`
 
